@@ -3,9 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:mobile/utils/dialogs/error_dialog.dart';
+import 'package:mobile/views/sale.dart';
 import 'utils/palette.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() => runApp(MaterialApp(
+Future main() async => runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: ThemeData(
       primarySwatch: createMaterialColor(const Color.fromARGB(255, 29, 64, 68)),
@@ -33,12 +35,10 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'Cancelar escaneo de QR', true, ScanMode.QR);
-      int barcodeInt = int.parse(barcodeScanRes);
-    } on Exception {
+          '#ff6666', 'Cancelar escaneo qr', true, ScanMode.QR);
+      print(barcodeScanRes);
+    } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
-      String errorMessage =
-          "Error al escanear el código QR de la venta. Por favor, inténtelo de nuevo.";
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -117,7 +117,12 @@ class _MyAppState extends State<MyApp> {
                   keyboardType: TextInputType.number),
               const SizedBox(height: 16.0),
               ElevatedButton(
-                onPressed: () => scanQR(),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Sale()),
+                  );
+                },
                 style: TextButton.styleFrom(
                   backgroundColor: createMaterialColor(const Color.fromARGB(
                       255, 29, 64, 68)), // Set the background color here
