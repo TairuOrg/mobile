@@ -17,6 +17,8 @@ Future main() async => runApp(MaterialApp(
     ),
     home: const MyApp()));
 
+final _saleIdController = TextEditingController();
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -35,14 +37,12 @@ class _MyAppState extends State<MyApp> {
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      await showErrorDialog(context, "You good?");
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancelar escaneo QR', true, ScanMode.QR);
-      print("JUAJUA" + barcodeScanRes);
       getSale(barcodeScanRes, context);
       setState(() {});
     } on PlatformException {
-      barcodeScanRes = 'Error al escanSear el código QR';
+      barcodeScanRes = 'Error al escanear el código QR';
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -108,8 +108,9 @@ class _MyAppState extends State<MyApp> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16.0),
-              const TextField(
-                  decoration: InputDecoration(
+              TextField(
+                  controller: _saleIdController,
+                  decoration: const InputDecoration(
                     focusColor: Color.fromARGB(255, 29, 64, 68),
                     border: OutlineInputBorder(),
                     labelText: 'Identificador de la venta',
@@ -127,10 +128,9 @@ class _MyAppState extends State<MyApp> {
               const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Sale()),
-                  );
+                  String saleId = _saleIdController.text;
+                  getSale(saleId, context);
+                  setState(() {});
                 },
                 style: TextButton.styleFrom(
                   backgroundColor: createMaterialColor(const Color.fromARGB(

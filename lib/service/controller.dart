@@ -13,7 +13,6 @@ Future<void> getSale(String id, BuildContext context) async {
       body: {"sale_id": id});
 
   final data = jsonDecode(response.body);
-  print("jaja" + data.toString());
   if (response.statusCode == 200) {
     Navigator.push(
       context,
