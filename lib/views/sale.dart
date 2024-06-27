@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:mobile/service/controller.dart';
 import 'package:mobile/utils/dialogs/error_dialog.dart';
 import 'package:mobile/utils/palette.dart';
 import 'package:mobile/service/data.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Sale extends StatefulWidget {
   const Sale({super.key});
@@ -28,14 +26,16 @@ class _SaleState extends State<Sale> {
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancelar', true, ScanMode.BARCODE);
-      print("SCANNER" + barcodeScanRes);
+      print("SCANNER1" + barcodeScanRes);
       getItem(barcodeScanRes, context);
       setState(() {});
-      Navigator.pop(context);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const Sale()),
-      );
+
+      print("SCANNER2" +
+          barcode +
+          " " +
+          itemName +
+          " " +
+          itemAvailableQuantity.toString());
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
@@ -273,11 +273,6 @@ class _SaleState extends State<Sale> {
                   addItem(barcode, quantityAdded.toString(),
                       currentSaleId.toString(), context);
                   setState(() {});
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Sale()),
-                  );
                 },
                 style: TextButton.styleFrom(
                   backgroundColor: createMaterialColor(const Color.fromARGB(

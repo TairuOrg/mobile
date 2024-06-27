@@ -43,14 +43,21 @@ Future<void> getItem(String item_barcode, BuildContext context) async {
   if (response.statusCode == 200) {
     var item_name = data['body']['payload']['name'];
     var item_available_quantity = data['body']['payload']['quantity'];
+    var item_barcode = data['body']['payload']['barcode_id'];
     itemName = item_name;
     itemAvailableQuantity = item_available_quantity;
     barcode = item_barcode;
+    quantityAdded = 1;
+    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Sale()),
+    );
   } else {
     await showErrorDialog(context, data['body']['payload'].toString());
     // If the server returns an error response, throw an exception.
   }
-  print(data);
+  print("ayuda" + data);
 }
 
 Future<void> addItem(String item_barcode, String quantity, String saleId,
@@ -73,4 +80,9 @@ Future<void> addItem(String item_barcode, String quantity, String saleId,
   itemName = "";
   itemAvailableQuantity = 0;
   quantityAdded = 0;
+  Navigator.pop(context);
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => const Sale()),
+  );
 }
