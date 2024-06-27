@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:mobile/service/controller.dart';
 import 'package:mobile/utils/dialogs/error_dialog.dart';
 import 'package:mobile/views/sale.dart';
 import 'utils/palette.dart';
@@ -34,11 +35,14 @@ class _MyAppState extends State<MyApp> {
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
+      await showErrorDialog(context, "You good?");
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'Cancelar escaneo qr', true, ScanMode.QR);
-      print(barcodeScanRes);
+          '#ff6666', 'Cancelar escaneo QR', true, ScanMode.QR);
+      print("JUAJUA" + barcodeScanRes);
+      getSale(barcodeScanRes, context);
+      setState(() {});
     } on PlatformException {
-      barcodeScanRes = 'Failed to get platform version.';
+      barcodeScanRes = 'Error al escanSear el código QR';
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -92,7 +96,12 @@ class _MyAppState extends State<MyApp> {
                         fontSize: 24.0,
                         fontWeight: FontWeight.bold)),
               ),
-              const SizedBox(height: 48.0),
+              const SizedBox(height: 16.0),
+              const Divider(
+                color: Color.fromARGB(255, 29, 64, 68),
+                thickness: 1.0,
+              ),
+              const SizedBox(height: 16.0),
               const Text(
                 "Alternativamente, puede ingresar el identificador de la venta manualmente:",
                 style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.normal),

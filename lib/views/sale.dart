@@ -31,15 +31,45 @@ class _SaleState extends State<Sale> {
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
-
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
     if (!mounted) return;
-
     setState(() {
       _scanBarcode = barcodeScanRes;
     });
+  }
+
+  Future<void> decreaseQuantity() async {
+    try {
+      if (quantityAdded > 1) {
+        quantityAdded = quantityAdded - 1;
+
+        setState(() {});
+      } else {
+        await showErrorDialog(
+            context, "No se puede añadir menos de una unidad de un artículo.");
+      }
+    } on Exception {
+      await showErrorDialog(
+          context, "No se pudo disminuir la cantidad del artículo.");
+    }
+  }
+
+  Future<void> increaseQuantity() async {
+    try {
+      if (quantityAdded < itemAvailableQuantity) {
+        quantityAdded = quantityAdded + 1;
+
+        setState(() {});
+      } else {
+        await showErrorDialog(context,
+            "No se puede añadir más unidades de las que hay disponibles.");
+      }
+    } on Exception {
+      await showErrorDialog(
+          context, "No se pudo aumentar la cantidad del artículo.");
+    }
   }
 
   @override
@@ -74,12 +104,14 @@ class _SaleState extends State<Sale> {
                   textAlign: TextAlign.left,
                 ),
                 const SizedBox(width: 10),
-                Text(
+                Expanded(
+                    child: Text(
                   cashierName,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                       fontSize: 28.0, fontWeight: FontWeight.normal),
                   textAlign: TextAlign.left,
-                ),
+                )),
               ]),
               Row(children: [
                 const Text(
@@ -88,14 +120,21 @@ class _SaleState extends State<Sale> {
                   textAlign: TextAlign.left,
                 ),
                 const SizedBox(width: 10),
-                Text(
+                Expanded(
+                    child: Text(
                   customerName,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                       fontSize: 28.0, fontWeight: FontWeight.normal),
                   textAlign: TextAlign.left,
-                ),
+                )),
               ]),
-              const SizedBox(height: 48),
+              const SizedBox(height: 16.0),
+              const Divider(
+                color: Color.fromARGB(255, 29, 64, 68),
+                thickness: 1.0,
+              ),
+              const SizedBox(height: 16),
               const Text(
                 "Añadir Artículo",
                 style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
@@ -116,8 +155,12 @@ class _SaleState extends State<Sale> {
                         fontSize: 24.0,
                         fontWeight: FontWeight.bold)),
               ),
-              const Divider(),
-              const SizedBox(height: 32),
+              const SizedBox(height: 16.0),
+              const Divider(
+                color: Color.fromARGB(255, 29, 64, 68),
+                thickness: 1.0,
+              ),
+              const SizedBox(height: 16),
               const Text(
                 "Datos del artículo:",
                 style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
@@ -131,12 +174,14 @@ class _SaleState extends State<Sale> {
                   textAlign: TextAlign.left,
                 ),
                 const SizedBox(width: 10),
-                Text(
+                Expanded(
+                    child: Text(
                   barcode,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                       fontSize: 28.0, fontWeight: FontWeight.normal),
                   textAlign: TextAlign.left,
-                ),
+                )),
               ]),
               const SizedBox(height: 16),
               Row(children: [
@@ -146,12 +191,14 @@ class _SaleState extends State<Sale> {
                   textAlign: TextAlign.left,
                 ),
                 const SizedBox(width: 10),
-                Text(
-                  barcode,
+                Expanded(
+                    child: Text(
+                  itemName,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                       fontSize: 28.0, fontWeight: FontWeight.normal),
                   textAlign: TextAlign.left,
-                ),
+                )),
               ]),
               const SizedBox(height: 16),
               Row(children: [
@@ -176,12 +223,40 @@ class _SaleState extends State<Sale> {
                   textAlign: TextAlign.left,
                 ),
                 const SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () => decreaseQuantity(),
+                  style: TextButton.styleFrom(
+                    backgroundColor: createMaterialColor(
+                        const Color.fromARGB(255, 29, 64, 68)),
+                    padding: const EdgeInsets.all(2.0),
+                  ),
+                  child: const Text("-",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold)),
+                ),
+                const SizedBox(width: 10),
                 Text(
-                  "5",
+                  quantityAdded.toString(),
                   style: const TextStyle(
                       fontSize: 28.0, fontWeight: FontWeight.normal),
                   textAlign: TextAlign.left,
                 ),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () => increaseQuantity(),
+                  style: TextButton.styleFrom(
+                    backgroundColor: createMaterialColor(
+                        const Color.fromARGB(255, 29, 64, 68)),
+                    padding: const EdgeInsets.all(2.0),
+                  ),
+                  child: const Text("+",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold)),
+                )
               ]),
               const SizedBox(height: 16.0),
               const SizedBox(height: 16.0),
@@ -199,6 +274,7 @@ class _SaleState extends State<Sale> {
                         fontSize: 24.0,
                         fontWeight: FontWeight.bold)),
               ),
+              const SizedBox(height: 16.0),
             ],
           ),
         ),

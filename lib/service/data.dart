@@ -1,6 +1,6 @@
-var cashierName = "John Doe";
-String customerName = "Jane Doe";
-String barcode = "1234567890";
-String itemName = "Item Name";
-int itemAvailableQuantity = 50;
-int quantityAdded = 5;
+var cashierName = "John Doe12345678901234567890112345678902345678901234567890";
+String customerName = "Jane Doe1234567890123456789012345678901234567890";
+String barcode = "1234567890123456789012341234567890567890";
+String itemName = "Ite1234567890123456789012345678901234567890m Name";
+int itemAvailableQuantity = 15;
+int quantityAdded = 10;
