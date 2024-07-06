@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:mobile/service/controller.dart';
+import 'package:mobile/service/data.dart';
 import 'package:mobile/utils/dialogs/error_dialog.dart';
-import 'package:mobile/views/sale.dart';
+import 'package:mobile/views/set_address.dart';
 import 'utils/palette.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+enum MenuItems { setAddress, getAddress }
 
 Future main() async => runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
@@ -27,11 +28,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  MenuItems? selectedItem;
   String _scanBarcode = 'Unknown';
   @override
   void initState() {
     super.initState();
   }
+
+  getAddress() async {
+    await showErrorDialog(context, "Dirección actual: $baseUrl");
+  }
+
+  
 
   Future<void> scanQR() async {
     String barcodeScanRes;
@@ -62,13 +70,42 @@ class _MyAppState extends State<MyApp> {
       backgroundColor:
           createMaterialColor(const Color.fromARGB(255, 230, 255, 250)),
       appBar: AppBar(
-        centerTitle: true,
-        title: const Text("Tairu Escáner",
-            style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
-        backgroundColor:
-            createMaterialColor(const Color.fromARGB(255, 29, 64, 68)),
-        foregroundColor: Colors.white,
-      ),
+          centerTitle: true,
+          title: const Text("Tairu Escáner",
+              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
+          backgroundColor:
+              createMaterialColor(const Color.fromARGB(255, 29, 64, 68)),
+          foregroundColor: Colors.white,
+          actions: [
+            PopupMenuButton<MenuItems>(
+              initialValue: selectedItem,
+              onSelected: (MenuItems item) {
+                setState(() {
+                  selectedItem = item;
+                });
+                if (item == MenuItems.setAddress) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Address()),
+                  );
+                }
+                if (item == MenuItems.getAddress) {
+                  getAddress();
+                }
+              },
+              itemBuilder: (BuildContext context) =>
+                  <PopupMenuEntry<MenuItems>>[
+                const PopupMenuItem<MenuItems>(
+                  value: MenuItems.setAddress,
+                  child: Text('Cambiar dirección del servidor'),
+                ),
+                const PopupMenuItem<MenuItems>(
+                  value: MenuItems.getAddress,
+                  child: Text('Dirección actual:'),
+                ),
+              ],
+            )
+          ]),
       body: Padding(
         padding: const EdgeInsets.all(32.0),
         child: Center(
