@@ -9,9 +9,8 @@ import 'package:mobile/views/sale.dart';
 import 'package:flutter/widgets.dart';
 
 Future<void> getSale(String id, BuildContext context) async {
-  final response = await http.post(
-      Uri.parse('http://$baseUrl/cashier/verify-sale'),
-      body: {"sale_id": id});
+  final response = await http
+      .post(Uri.parse('$baseUrl/cashier/verify-sale'), body: {"sale_id": id});
 
   final data = jsonDecode(response.body);
   if (response.statusCode == 200) {
@@ -36,8 +35,7 @@ Future<void> getSale(String id, BuildContext context) async {
 }
 
 Future<void> getItem(String item_barcode, BuildContext context) async {
-  final response = await http.post(
-      Uri.parse('http://$baseUrl/cashier/get-item'),
+  final response = await http.post(Uri.parse('$baseUrl/cashier/get-item'),
       body: {"barcode_id": item_barcode});
   final data = jsonDecode(response.body);
   if (response.statusCode == 200) {
@@ -63,7 +61,7 @@ Future<void> getItem(String item_barcode, BuildContext context) async {
 Future<void> addItem(String item_barcode, String quantity, String saleId,
     BuildContext context) async {
   final response =
-      await http.post(Uri.parse('http://$baseUrl/cashier/add-item'), body: {
+      await http.post(Uri.parse('$baseUrl/cashier/add-item'), body: {
     "sale_id": saleId,
     "item_barcode_id": item_barcode,
     "quantity": quantity,

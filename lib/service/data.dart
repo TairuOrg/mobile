@@ -5,4 +5,4 @@ String itemName = "";
 int itemAvailableQuantity = 0;
 int quantityAdded = 0;
 int currentSaleId = 0;
-String baseUrl = "192.168.0.199:4000";
+String baseUrl = "https://smart-quality-antelope.ngrok-free.app";
